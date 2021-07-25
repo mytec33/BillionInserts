@@ -6,7 +6,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-const valuesCount int = 10
+const valuesCount int = 200
 
 func main() {
 	db, errConn := sql.Open("sqlite3", "./test.db")
@@ -15,7 +15,7 @@ func main() {
 	dbSetPragma(db)
 	dbCreateTable(db)
 
-	stmt, err := db.Prepare("INSERT INTO userinfo(username, departname, created) values(?, ?, ?),(?, ?, ?),(?, ?, ?),(?, ?, ?),(?,?,?),(?, ?, ?),(?, ?, ?),(?, ?, ?),(?, ?, ?),(?, ?, ?)")
+	stmt, err := db.Prepare(createInsertString())
 	checkErr(err)
 	defer stmt.Close()
 
@@ -31,6 +31,16 @@ func main() {
 		}
 	}
 	print("\n")
+}
+
+func createInsertString() string {
+	var baseString = "INSERT into userinfo (username, departname, created) values"
+
+	for i := 1; i <= valuesCount; i++ {
+		baseString += "(?, ?, ?),"
+	}
+
+	return baseString[:len(baseString)-1]
 }
 
 func dbSetPragma(db *sql.DB) {
@@ -57,10 +67,11 @@ func checkErr(err error) {
 }
 
 func insertPrepared(stmt *sql.Stmt) {
-	_, err := stmt.Exec("bill", "研发部门", "2021-07-25", "bill", "研发部门", "2021-07-25",
-		"bill", "研发部门", "2021-07-25", "bill", "研发部门", "2021-07-25",
-		"bill", "研发部门", "2021-07-25", "bill", "研发部门", "2021-07-25",
-		"bill", "研发部门", "2021-07-25", "bill", "研发部门", "2021-07-25",
-		"bill", "研发部门", "2021-07-25", "bill", "研发部门", "2021-07-25")
+	tuples := []interface{}{}
+
+	for i := 0; i < valuesCount; i++ {
+		tuples = append(tuples, "bill", "研发部门", "2021-07-25")
+	}
+	_, err := stmt.Exec(tuples...)
 	checkErr(err)
 }
