@@ -6,7 +6,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-const valuesCount int = 200
+const valuesCount int = 100
 
 func main() {
 	db, errConn := sql.Open("sqlite3", "./test.db")
@@ -15,39 +15,16 @@ func main() {
 	dbSetPragma(db)
 	dbCreateTable(db)
 
-	stmt, err := db.Prepare(createInsertString())
-	checkErr(err)
-	defer stmt.Close()
-
-	var counter = 0
-	var rows = 1000000 / valuesCount
-
-	for i := 0; i < rows; i++ {
-		insertPrepared(stmt)
-
-		counter += valuesCount
-		if (counter % 1000) == 0 {
-			print("#")
-		}
-	}
+	insertPrepared(db)
 	print("\n")
-}
-
-func createInsertString() string {
-	var baseString = "INSERT into userinfo (username, departname, created) values"
-
-	for i := 1; i <= valuesCount; i++ {
-		baseString += "(?, ?, ?),"
-	}
-
-	return baseString[:len(baseString)-1]
 }
 
 func dbSetPragma(db *sql.DB) {
 	db.Exec("PRAGMA journal_mode = OFF;")
 	db.Exec("PRAGMA synchronous = OFF;")
 	db.Exec("PRAGMA temp_store = MEMORY;")
-	//db.Exec("PRAGMA cache_size = 1000000;")
+	//db.Exec("PRAGMA cache_size = 32768;")
+	//db.Exec("PRAGMA page_size = 16384")
 }
 
 func dbCreateTable(db *sql.DB) {
@@ -66,12 +43,34 @@ func checkErr(err error) {
 	}
 }
 
-func insertPrepared(stmt *sql.Stmt) {
+func insertPrepared(db *sql.DB) {
+	var baseString = "INSERT into userinfo (username, departname, created) values"
 	tuples := []interface{}{}
 
 	for i := 0; i < valuesCount; i++ {
 		tuples = append(tuples, "bill", "研发部门", "2021-07-25")
+		baseString += "(?, ?, ?),"
 	}
-	_, err := stmt.Exec(tuples...)
+
+	stmt, err := db.Prepare(baseString[:len(baseString)-1])
+	checkErr(err)
+	defer stmt.Close()
+
+	_, err = db.Exec("BEGIN")
+	checkErr(err)
+
+	var counter = 0
+	var rows = 100000000 / valuesCount
+	for i := 0; i < rows; i++ {
+		_, err = stmt.Exec(tuples...)
+		checkErr(err)
+
+		counter += valuesCount
+		if (counter % 100000) == 0 {
+			print("#")
+		}
+	}
+
+	_, err = db.Exec("COMMIT")
 	checkErr(err)
 }
