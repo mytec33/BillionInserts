@@ -1,21 +1,26 @@
 package main
 
 import (
+	"context"
 	"database/sql"
+	"os"
 
 	_ "github.com/mattn/go-sqlite3"
 )
 
-const valuesCount int = 100
+const targetRowCount int = 100_000_000
+const rowsPerBatch int = 50
 
 func main() {
+	os.Remove("./test.db")
 	db, errConn := sql.Open("sqlite3", "./test.db")
 	checkErr(errConn)
 
 	dbSetPragma(db)
 	dbCreateTable(db)
 
-	insertPrepared(db)
+	//insertPrepared(db)
+	insertTransaction(db)
 	print("\n")
 }
 
@@ -23,7 +28,7 @@ func dbSetPragma(db *sql.DB) {
 	db.Exec("PRAGMA journal_mode = OFF;")
 	db.Exec("PRAGMA synchronous = OFF;")
 	db.Exec("PRAGMA temp_store = MEMORY;")
-	//db.Exec("PRAGMA cache_size = 32768;")
+	db.Exec("PRAGMA cache_size = 1000000;")
 	//db.Exec("PRAGMA page_size = 16384")
 }
 
@@ -47,30 +52,63 @@ func insertPrepared(db *sql.DB) {
 	var baseString = "INSERT into userinfo (username, departname, created) values"
 	tuples := []interface{}{}
 
-	for i := 0; i < valuesCount; i++ {
-		tuples = append(tuples, "bill", "研发部门", "2021-07-25")
+	for i := 0; i < rowsPerBatch; i++ {
+		tuples = append(tuples, "b", "b", "5")
 		baseString += "(?, ?, ?),"
 	}
+
+	_, err := db.Exec("BEGIN")
+	checkErr(err)
 
 	stmt, err := db.Prepare(baseString[:len(baseString)-1])
 	checkErr(err)
 	defer stmt.Close()
 
-	_, err = db.Exec("BEGIN")
-	checkErr(err)
-
 	var counter = 0
-	var rows = 100000000 / valuesCount
-	for i := 0; i < rows; i++ {
+	var iterations = targetRowCount / rowsPerBatch
+	for i := 0; i < iterations; i++ {
 		_, err = stmt.Exec(tuples...)
 		checkErr(err)
 
-		counter += valuesCount
-		if (counter % 100000) == 0 {
+		counter += rowsPerBatch
+		if (counter % 100_000) == 0 {
 			print("#")
 		}
 	}
 
 	_, err = db.Exec("COMMIT")
+	checkErr(err)
+}
+
+func insertTransaction(db *sql.DB) {
+	var baseString = "INSERT into userinfo (username, departname, created) values"
+	tuples := []interface{}{}
+
+	for i := 0; i < rowsPerBatch; i++ {
+		tuples = append(tuples, "b", "b", "5")
+		baseString += "(?, ?, ?),"
+	}
+
+	ctx := context.Background()
+	tx, err := db.BeginTx(ctx, nil)
+	checkErr(err)
+
+	stmt, err := tx.PrepareContext(ctx, baseString[:len(baseString)-1])
+	checkErr(err)
+	defer stmt.Close()
+
+	var counter = 0
+	var iterations = targetRowCount / rowsPerBatch
+	for i := 0; i < iterations; i++ {
+		_, err = stmt.Exec(tuples...)
+		checkErr(err)
+
+		counter += rowsPerBatch
+		if (counter % 100_000) == 0 {
+			print("#")
+		}
+	}
+
+	err = tx.Commit()
 	checkErr(err)
 }
