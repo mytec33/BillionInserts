@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "YBtKDz705JNYvvPe0WBJiip3LehVHpxdUdCQFwy2IK6/TCfoF/552qfRPrA2YkMdPKwzXRZh6JWhs42eUH3tjA==",
+  "dgSpecHash": "2hqhZP+mUmKiisEKG2ZrlonTenFhfQhz5nvLa8hbHioA7cmfwgTN9+CrhNbqv3r9oHODqC2d4M1SZeAOBbG7cA==",
   "success": true,
   "projectFilePath": "/Users/bill/go/src/TestSqlite3/csharp/testsqlite/testsqlite.csproj",
   "expectedPackageFiles": [
@@ -45,7 +45,10 @@
     "/Users/bill/.nuget/packages/system.text.encodings.web/4.7.2/system.text.encodings.web.4.7.2.nupkg.sha512",
     "/Users/bill/.nuget/packages/system.text.json/4.6.0/system.text.json.4.6.0.nupkg.sha512",
     "/Users/bill/.nuget/packages/system.threading.tasks.extensions/4.5.2/system.threading.tasks.extensions.4.5.2.nupkg.sha512",
-    "/Users/bill/.nuget/packages/system.windows.extensions/4.7.0/system.windows.extensions.4.7.0.nupkg.sha512"
+    "/Users/bill/.nuget/packages/system.windows.extensions/4.7.0/system.windows.extensions.4.7.0.nupkg.sha512",
+    "/Users/bill/.nuget/packages/microsoft.netcore.app.runtime.osx-x64/6.0.0-preview.5.21301.5/microsoft.netcore.app.runtime.osx-x64.6.0.0-preview.5.21301.5.nupkg.sha512",
+    "/Users/bill/.nuget/packages/microsoft.netcore.app.crossgen2.osx-x64/6.0.0-preview.5.21301.5/microsoft.netcore.app.crossgen2.osx-x64.6.0.0-preview.5.21301.5.nupkg.sha512",
+    "/Users/bill/.nuget/packages/microsoft.aspnetcore.app.runtime.osx-x64/6.0.0-preview.5.21301.17/microsoft.aspnetcore.app.runtime.osx-x64.6.0.0-preview.5.21301.17.nupkg.sha512"
   ],
   "logs": []
 }

@@ -1,0 +1,2 @@
+/Users/bill/go/src/TestSqlite3/csharp/testsqlite/bin/Debug/net6.0/osx.11.0-arm64/publish/testsqlite.pdb
+/Users/bill/go/src/TestSqlite3/csharp/testsqlite/bin/Debug/net6.0/osx.11.0-arm64/publish/testsqlite

@@ -1,0 +1,4 @@
+/Users/bill/go/src/TestSqlite3/csharp/testsqlite/bin/Debug/net6.0/osx.11.0-x64/publish/testsqlite.pdb
+/Users/bill/go/src/TestSqlite3/csharp/testsqlite/bin/Debug/net6.0/osx.11.0-x64/publish/libe_sqlite3.dylib
+/Users/bill/go/src/TestSqlite3/csharp/testsqlite/bin/Debug/net6.0/osx.11.0-x64/publish/SQLite.Interop.dll
+/Users/bill/go/src/TestSqlite3/csharp/testsqlite/bin/Debug/net6.0/osx.11.0-x64/publish/testsqlite

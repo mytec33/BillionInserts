@@ -1,0 +1,19 @@
+{
+  "runtimeOptions": {
+    "tfm": "net6.0",
+    "includedFrameworks": [
+      {
+        "name": "Microsoft.NETCore.App",
+        "version": "6.0.0-preview.5.21301.5"
+      }
+    ],
+    "configProperties": {
+      "Internal.Runtime.InteropServices.ComponentActivator.IsSupported": false,
+      "Internal.Runtime.InteropServices.InMemoryAssemblyLoader.IsSupported": false,
+      "System.ComponentModel.TypeConverter.EnableUnsafeBinaryFormatterInDesigntimeLicenseContextSerialization": false,
+      "System.Resources.ResourceManager.AllowCustomResourceTypes": false,
+      "System.Runtime.InteropServices.BuiltInComInterop.IsSupported": false,
+      "System.StartupHookProvider.IsSupported": false
+    }
+  }
+}
